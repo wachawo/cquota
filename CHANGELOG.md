@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- `cquota completion bash` and `cquota completion zsh` print a completion
+  script for commands, options and their values.
+- README: how to put `cquota` on the `PATH` outside Claude Code sessions.
+
+### Changed
+
+- `cquota` without a command runs `report`, and takes its options, instead
+  of failing with a usage error.
+
 ## [0.0.3] - 2026-11-14
 
 ### Changed

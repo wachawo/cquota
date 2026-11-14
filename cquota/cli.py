@@ -7,6 +7,7 @@ import logging
 import sys
 
 # Local imports
+from cquota import completion
 from cquota import config
 from cquota import ingest
 from cquota import limits
@@ -22,6 +23,8 @@ LOGGING = {
 }
 logging.basicConfig(**LOGGING)
 logger = logging.getLogger(__name__)
+
+DEFAULT_COMMAND = "report"
 
 
 def run_ingest_command(arguments: argparse.Namespace) -> None:
@@ -78,10 +81,17 @@ def run_limits_command(arguments: argparse.Namespace) -> None:
     sys.stdout.write(limits.build_limits_report(arguments.full_paths, arguments.usd))
 
 
+def run_completion_command(arguments: argparse.Namespace) -> None:
+    sys.stdout.write(completion.render_script(build_parser(), arguments.shell, DEFAULT_COMMAND))
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="cquota",
-        description="A local ledger of the tokens a Claude Code subscription spends.",
+        description=(
+            "A local ledger of the tokens a Claude Code subscription spends. "
+            f"Without a command it runs {DEFAULT_COMMAND}, and takes its options."
+        ),
     )
     parser.add_argument("-v", "--version", action="version", version=f"cquota {config.read_version()}")
     commands = parser.add_subparsers(dest="command", required=True)
@@ -121,11 +131,23 @@ def build_parser() -> argparse.ArgumentParser:
     limits_parser.add_argument("--full-paths", action="store_true", help="show projects by full path")
     limits_parser.add_argument("--usd", action="store_true", help="add the API-equivalent cost as the last column")
     limits_parser.set_defaults(handler=run_limits_command)
+    completion_parser = commands.add_parser("completion", help="print the completion script of a shell")
+    completion_parser.add_argument("shell", choices=completion.SHELLS)
+    completion_parser.set_defaults(handler=run_completion_command)
     return parser
 
 
+def add_default_command(argv: list[str], parser: argparse.ArgumentParser) -> list[str]:
+    """Put the default command in front of a command line that names none."""
+    names_command = bool(argv) and not argv[0].startswith("-")
+    if names_command or (argv and argv[0] in completion.list_top_flags(parser)):
+        return argv
+    return [DEFAULT_COMMAND, *argv]
+
+
 def main():
-    arguments = build_parser().parse_args()
+    parser = build_parser()
+    arguments = parser.parse_args(add_default_command(sys.argv[1:], parser))
     arguments.handler(arguments)
 
 

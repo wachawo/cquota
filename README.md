@@ -57,6 +57,35 @@ bin/cquota ingest
 The first run reads the whole history, every later run reads only what was
 appended since.
 
+### On the PATH
+
+The plugin puts `cquota` on the `PATH` of Claude Code sessions only. For
+every other terminal, link the launcher of a clone into a directory that is
+already on the `PATH`:
+
+```bash
+ln -s /path/to/cquota/bin/cquota ~/.local/bin/cquota
+```
+
+The link follows the clone, so an update needs no second step. The examples
+below call `bin/cquota` from a clone; with the link it is `cquota` from any
+directory.
+
+### Shell completion
+
+Commands, options and their values complete in bash and zsh. Add one line
+to `~/.bashrc`:
+
+```bash
+source <(cquota completion bash)
+```
+
+or to `~/.zshrc`, after `compinit`:
+
+```bash
+source <(cquota completion zsh)
+```
+
 ## Usage
 
 Inside a Claude Code session:
@@ -76,6 +105,9 @@ bin/cquota ingest --quiet
 ```bash
 bin/cquota report
 ```
+
+`report` is the default command: `cquota` alone prints the same report, and
+`cquota --weekly` is `cquota report --weekly`.
 
 ### By session
 

@@ -1,0 +1,14 @@
+{
+  "name": "cquota",
+  "description": "The cquota plugin: token accounting for a Claude Code subscription.",
+  "owner": {
+    "name": "wachawo"
+  },
+  "plugins": [
+    {
+      "name": "cquota",
+      "source": "./",
+      "description": "A local ledger of the tokens a Claude Code subscription spends, by project folder and by session."
+    }
+  ]
+}

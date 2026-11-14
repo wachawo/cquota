@@ -1,0 +1,11 @@
+{
+  "name": "cquota",
+  "version": "0.0.3",
+  "description": "A local ledger of the tokens a Claude Code subscription spends, by project folder and by session.",
+  "author": {
+    "name": "wachawo"
+  },
+  "repository": "https://github.com/wachawo/cquota",
+  "license": "Apache-2.0",
+  "keywords": ["usage", "tokens", "subscription", "cost", "ledger"]
+}
